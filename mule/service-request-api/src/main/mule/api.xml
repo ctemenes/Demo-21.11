@@ -51,7 +51,7 @@
                                                correlationId="#[correlationId]"
                                                label="service-request.v1"
                                                doc:name="Send to works management queue">
-                <azure-service-bus-messaging:body><![CDATA[#[write(vars.canonical, "application/json")]]]></azure-service-bus-messaging:body>
+                <azure-service-bus-messaging:body><![CDATA[#[vars.canonical]]]></azure-service-bus-messaging:body>
             </azure-service-bus-messaging:send>
         </until-successful>
         <logger level="INFO" category="au.digitalaura.servicerequests" doc:name="Log queued"
