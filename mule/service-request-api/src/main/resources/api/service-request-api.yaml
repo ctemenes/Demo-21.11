@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Service Request API
+  version: 1.0.0
+  description: >
+    Public-facing API for lodging and tracking council service requests
+    (potholes, missed bins, street lights and similar). Requests are validated,
+    mapped to a canonical message and queued for the works management system.
+    The API answers as soon as the request is safely on the queue.
+  contact:
+    name: Connor Temenes
+    email: ctemenes@gmail.com
+servers:
+  - url: https://{host}/api
+    variables:
+      host:
+        default: localhost:8081
+tags:
+  - name: Service requests
+  - name: Data loads
+  - name: Operations
+paths:
+  /service-requests:
+    post:
+      tags: [Service requests]
+      summary: Lodge a service request
+      operationId: submitServiceRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewServiceRequest'
+            example:
+              category: pothole
+              description: Deep pothole in the left lane outside number 14, about 40 cm wide.
+              location:
+                address: 14 Example Street
+                suburb: Paddington
+                postcode: '4064'
+                latitude: -27.4598
+                longitude: 153.0029
+              assetId: RD-004512
+              reporter:
+                name: Alex Citizen
+                email: alex.citizen@example.com
+                phone: '0400 000 000'
+              channel: web
+      responses:
+        '202':
+          description: Accepted and queued for the works management system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '503':
+          $ref: '#/components/responses/DownstreamUnavailable'
+  /service-requests/{trackingId}:
+    get:
+      tags: [Service requests]
+      summary: Check the status of a service request
+      operationId: getServiceRequest
+      parameters:
+        - name: trackingId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SR-[0-9]{8}-[A-Z0-9]{6}$'
+          example: SR-20261121-8F3K2A
+      responses:
+        '200':
+          description: Current status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRequestStatus'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/DownstreamUnavailable'
+  /data-loads/asset-register:
+    post:
+      tags: [Data loads]
+      summary: Start a load of the asset register file
+      description: >
+        Runs the same extract, transform and load job that the nightly
+        schedule runs. Returns straight away with a run id. The job reports its
+        counts to the works management system when it finishes.
+      operationId: startAssetRegisterLoad
+      responses:
+        '202':
+          description: Load started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoadStarted'
+        '503':
+          $ref: '#/components/responses/DownstreamUnavailable'
+  /health:
+    get:
+      tags: [Operations]
+      summary: Liveness check
+      operationId: getHealth
+      responses:
+        '200':
+          description: The API is running.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+components:
+  responses:
+    BadRequest:
+      description: The request did not match the contract.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No service request with that tracking id.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnsupportedMediaType:
+      description: The body must be application/json.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    DownstreamUnavailable:
+      description: A downstream system could not be reached. Safe to retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Category:
+      type: string
+      enum: [pothole, missed_bin, street_light, graffiti, illegal_dumping, fallen_tree, other]
+    NewServiceRequest:
+      type: object
+      additionalProperties: false
+      required: [category, description, location, reporter]
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        description:
+          type: string
+          minLength: 10
+          maxLength: 2000
+        location:
+          $ref: '#/components/schemas/Location'
+        assetId:
+          type: string
+          pattern: '^[A-Z]{2}-[0-9]{6}$'
+          description: Asset register id, when the reporter knows it.
+        reporter:
+          $ref: '#/components/schemas/Reporter'
+        channel:
+          type: string
+          enum: [web, phone, mobile_app]
+          default: web
+    Location:
+      type: object
+      additionalProperties: false
+      required: [address, suburb, postcode]
+      properties:
+        address:
+          type: string
+          minLength: 3
+          maxLength: 200
+        suburb:
+          type: string
+          minLength: 2
+          maxLength: 80
+        postcode:
+          type: string
+          pattern: '^4[0-9]{3}$'
+          description: Queensland postcode.
+        latitude:
+          type: number
+          minimum: -29.5
+          maximum: -9.0
+        longitude:
+          type: number
+          minimum: 137.9
+          maximum: 153.6
+    Reporter:
+      type: object
+      additionalProperties: false
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 20
+    Receipt:
+      type: object
+      required: [trackingId, status, receivedAt]
+      properties:
+        trackingId:
+          type: string
+          example: SR-20261121-8F3K2A
+        status:
+          type: string
+          enum: [RECEIVED]
+        receivedAt:
+          type: string
+          format: date-time
+        department:
+          type: string
+          example: Roads and Drainage
+        targetResolutionHours:
+          type: integer
+          example: 48
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: /api/service-requests/SR-20261121-8F3K2A
+    ServiceRequestStatus:
+      type: object
+      required: [trackingId, status, category, receivedAt]
+      properties:
+        trackingId:
+          type: string
+        status:
+          type: string
+          enum: [RECEIVED, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED]
+        category:
+          $ref: '#/components/schemas/Category'
+        department:
+          type: string
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        suburb:
+          type: string
+        receivedAt:
+          type: string
+          format: date-time
+        targetResolutionAt:
+          type: string
+          format: date-time
+    LoadStarted:
+      type: object
+      required: [runId, status]
+      properties:
+        runId:
+          type: string
+        status:
+          type: string
+          enum: [STARTED]
+        source:
+          type: string
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [UP]
+        application:
+          type: string
+        environment:
+          type: string
+        time:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      required: [code, message, correlationId]
+      properties:
+        code:
+          type: string
+          example: BAD_REQUEST
+        message:
+          type: string
+        correlationId:
+          type: string
+        details:
+          type: array
+          items:
+            type: string

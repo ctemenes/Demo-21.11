@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+        http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+
+    <!-- Nightly ETL: the asset register is exported as a CSV by an older
+         system. This job extracts it, cleans and checks every row, loads the
+         good rows into the works system in blocks, and reports what it rejected. -->
+
+    <flow name="asset-register-nightly" doc:name="Nightly schedule">
+        <scheduler doc:name="02:00 Brisbane time">
+            <scheduling-strategy>
+                <cron expression="${etl.cron}" timeZone="Australia/Brisbane"/>
+            </scheduling-strategy>
+        </scheduler>
+        <flow-ref name="run-asset-register-load" doc:name="Run the load"/>
+    </flow>
+
+    <!-- POST /data-loads/asset-register: run the same job on demand. -->
+    <flow name="post:\data-loads\asset-register:service-request-api-config">
+        <flow-ref name="run-asset-register-load" doc:name="Run the load"/>
+        <ee:transform doc:name="Load started">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ runId: vars.runId, status: "STARTED", source: p("assetfile.path") }]]></ee:set-payload>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="httpStatus">202</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+    </flow>
+
+    <flow name="run-asset-register-load">
+        <set-variable variableName="runId" doc:name="Run id"
+                      value='#["ETL-" ++ ((now() >> "Australia/Brisbane") as String {format: "yyyyMMdd-HHmmss"})]'/>
+        <logger level="INFO" category="au.digitalaura.etl" doc:name="Log start"
+                message='#["Asset register load starting run=$(vars.runId) source=$(p("assetfile.path"))"]'/>
+
+        <!-- Extract -->
+        <http:request method="GET" config-ref="asset-file-store" doc:name="Extract: fetch the CSV"
+                      url='#["https://" ++ p("assetfile.host") ++ p("assetfile.path") ++ "?" ++ p("assetfile.sas")]'/>
+        <ee:transform doc:name="CSV to rows">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+input payload application/csv header=true
+output application/java
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+
+        <batch:job jobName="asset-register-load" maxFailedRecords="-1" blockSize="100" jobInstanceId="#[vars.runId]">
+            <batch:process-records>
+                <!-- Transform -->
+                <batch:step name="clean-and-check">
+                    <ee:transform doc:name="Transform: clean and check the row">
+                        <ee:message>
+                            <ee:set-payload resource="dwl/asset-row.dwl"/>
+                        </ee:message>
+                    </ee:transform>
+                    <choice doc:name="Row trusted?">
+                        <when expression="#[payload.valid]">
+                            <set-payload value="#[payload.record]" doc:name="Keep the clean record"/>
+                        </when>
+                        <otherwise>
+                            <logger level="WARN" category="au.digitalaura.etl" doc:name="Log reject"
+                                    message='#["Rejected row run=$(vars.runId) asset=$(payload.record.assetId default "") problems=$(payload.problems joinBy "; ")"]'/>
+                            <raise-error type="ETL:INVALID_ROW" description="Row failed the data quality checks."/>
+                        </otherwise>
+                    </choice>
+                </batch:step>
+                <!-- Load -->
+                <batch:step name="load-to-works-system" acceptPolicy="NO_FAILURES">
+                    <batch:aggregator size="100" doc:name="Blocks of 100">
+                        <http:request method="PUT" config-ref="works-system-api" path="/assets/batch" doc:name="Load: upsert block">
+                            <http:body><![CDATA[#[output application/json --- { runId: vars.runId, assets: payload }]]]></http:body>
+                            <http:headers>#[{"x-functions-key": p("works.key"), "Content-Type": "application/json"}]</http:headers>
+                        </http:request>
+                    </batch:aggregator>
+                </batch:step>
+            </batch:process-records>
+            <batch:on-complete>
+                <ee:transform doc:name="Run report">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    runId: payload.batchJobInstanceId,
+    source: p("assetfile.path"),
+    totalRows: payload.totalRecords,
+    loadedRows: payload.successfulRecords,
+    rejectedRows: payload.failedRecords,
+    elapsedMs: payload.elapsedTimeInMillis
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+                <logger level="INFO" category="au.digitalaura.etl" doc:name="Log report"
+                        message='#["Asset register load finished run=$(payload.runId) total=$(payload.totalRows) loaded=$(payload.loadedRows) rejected=$(payload.rejectedRows)"]'/>
+                <http:request method="POST" config-ref="works-system-api" path="/etl-runs" doc:name="Record the run">
+                    <http:headers>#[{"x-functions-key": p("works.key"), "Content-Type": "application/json"}]</http:headers>
+                </http:request>
+            </batch:on-complete>
+        </batch:job>
+    </flow>
+</mule>

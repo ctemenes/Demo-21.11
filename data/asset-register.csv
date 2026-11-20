@@ -1,0 +1,251 @@
+asset_id,description,suburb,postcode,latitude,longitude,status,installed_on
+DR-001000,Stormwater drain   155 North side,KENMORE,4069,-27.551608,153.052300,active,1998-05-16
+sg-001001,Street sign   144 South side,  Paddington ,4064,-27.520444,152.985610,Under repair,2000-05-13
+rd-001002,Road segment   106 North side,  Annerley ,4103,-27.394580,152.933279,Active,
+BN-001003,Bin service point   32 North side,Kenmore,4069,-27.497838,152.902477,active,28/7/2005
+pk-001004,Park asset   72 East side,Paddington,4064,-27.551608,153.102160,Active,2002-04-09
+dr-001005,Stormwater drain   53 North side,Paddington,4064,-27.573353,152.903090,active,2019-12-25
+PK-001006,Park asset   166 South side,toowong,4066,-27.525294,152.960360,active,
+PK-001007,Park asset   70 South side,ANNERLEY,4103,-27.366866,152.912215,active,2004-07-02
+pk-001008,Park asset   133 West side,PADDINGTON,4064,-27.446122,153.006147,active,2015-12-20
+pk-001009,Park asset   110 East side,  Carindale ,4152,-27.566694,153.004582,active,1/12/2007
+PK-001010,Park asset   124 East side,CARINDALE,4152,-27.550833,152.906845,Active,2012-10-17
+sg-001011,Street sign   38 South side,CHERMSIDE,4032,-27.405096,153.097637,ACTIVE,24/6/2023
+dr-001012,Stormwater drain   112 East side,New Farm,4005,-27.576187,152.961637,ACTIVE,2012-05-02
+DR-001013,Stormwater drain   133 North side,chermside,4032,-27.541460,152.982848,Decommissioned,6/12/2025
+rd-001014,Road segment   10 South side,Indooroopilly,4068,-27.563553,153.134307,Active,
+rd-001015,Road segment   127 West side,wynnum,4178,-27.378664,152.966152,Decommissioned,5/4/2010
+sl-001016,Street light   161 East side,  Indooroopilly ,4068,-27.505825,152.960882,ACTIVE,2009-12-06
+dr-001017,Stormwater drain   109 West side,NUNDAH,4012,-27.452310,153.069312,Active,2000-08-24
+PK-001018,Park asset   13 West side,nundah,4012,-27.575415,152.990509,Under repair,
+dr-001019,Stormwater drain   89 North side,paddington,4064,-27.469713,153.028599,Decommissioned,2007-11-25
+PK-001020,Park asset   52 East side,Carindale,4152,-27.484196,152.954389,active,24/12/2023
+SL-001021,Street light   106 South side,sunnybank,4109,-27.473265,153.135773,Active,26/2/1998
+PK-001022,Park asset   100 West side,Paddington,4064,-27.497736,153.111983,Decommissioned,2004-03-09
+sl-001023,Street light   124 West side,wynnum,4178,-27.512379,152.926150,Active,2006-09-28
+rd-001024,Road segment   29 East side,  Wynnum ,4178,-27.471386,152.940729,Active,
+SL-001025,Street light   172 West side,  Kenmore ,4069,-27.421284,153.025605,active,
+rd-001026,Road segment   37 West side,Sunnybank,4109,-27.586815,152.913012,ACTIVE,13/7/2022
+SG-001027,Street sign   170 East side,Indooroopilly,4068,-27.552204,152.918370,ACTIVE,
+SL-001028,Street light   143 North side,west end,4101,-27.516184,153.132146,ACTIVE,14/4/2005
+RD-001029,Road segment   27 South side,Chermside,4032,-27.479128,153.008264,ACTIVE,2023-10-02
+RD-001030,Road segment   116 East side,sunnybank,4109,-27.552469,153.075570,Decommissioned,14/6/2022
+DR-001031,Stormwater drain   11 East side,indooroopilly,4068,-27.550646,152.990010,ACTIVE,2018-12-12
+DR-001032,Stormwater drain   23 East side,toowong,4066,-27.489533,152.923553,Decommissioned,
+sg-001033,Street sign   175 North side,sunnybank,4109,-27.420834,152.955679,Active,1/10/2017
+BN-001034,Bin service point   54 North side,west end,4101,-27.526473,152.920218,ACTIVE,28/7/1998
+pk-001035,Park asset   98 West side,  New Farm ,4005,-27.551506,153.079342,Decommissioned,
+sg-001036,Street sign   116 East side,Nundah,4012,-27.400349,153.052982,Active,
+pk-001037,Park asset   23 South side,SUNNYBANK,4109,-27.358403,153.125318,active,2014-11-01
+bn-001038,Bin service point   21 West side,annerley,4103,-27.569492,153.056968,active,
+SG-001039,Street sign   171 West side,Toowong,4066,-27.404131,152.939281,Active,19/9/2017
+BN-001040,Bin service point   117 East side,  Nundah ,4012,-27.564138,152.913530,ACTIVE,19/6/2015
+dr-001041,Stormwater drain   166 North side,  Toowong ,4066,-27.407702,153.103395,active,
+RD-001042,Road segment   2 West side,Carindale,4152,-27.420355,152.955325,active,2004-02-16
+sg-001043,Street sign   142 East side,Paddington,4064,-27.542412,153.125451,Under repair,2022-02-04
+SL-001044,Street light   30 West side,Sunnybank,4109,-27.519646,153.117832,Decommissioned,2002-04-11
+bn-001045,Bin service point   85 South side,nundah,4012,-27.369048,152.914927,Active,2019-09-13
+PK-009008,Park asset   26 West side,new farm,4005,-27.401864,153.072295,Decommissioned,31/02/2019
+SL-12,Park asset   88 West side,CARINDALE,4152,-27.411438,153.128015,Active,
+SL-001046,Street light   117 West side,  Annerley ,4103,-27.538149,153.107846,Under repair,5/6/2008
+SG-001047,Street sign   171 South side,  Indooroopilly ,4068,-27.435941,153.101114,Active,22/12/2006
+BN-001048,Bin service point   161 West side,chermside,4032,-27.568932,152.926805,Decommissioned,
+pk-001049,Park asset   109 East side,  Nundah ,4012,-27.386792,153.046921,Decommissioned,
+PK-001050,Park asset   169 West side,  Chermside ,4032,-27.519150,152.932496,ACTIVE,
+SG-001051,Street sign   33 East side,Toowong,4066,-27.355969,152.968422,ACTIVE,
+sl-001052,Street light   64 East side,  Chermside ,4032,-27.567956,152.919904,Under repair,
+SL-001053,Street light   61 East side,  Carindale ,4152,-27.353052,153.073541,active,
+SG-001054,Street sign   102 East side,NUNDAH,4012,-27.466980,152.980993,Decommissioned,2004-03-24
+BN-001055,Bin service point   153 North side,  Indooroopilly ,4068,-27.411698,153.065334,ACTIVE,1/6/2000
+PK-001056,Park asset   61 East side,  Wynnum ,4178,-27.379507,153.117764,ACTIVE,2013-06-21
+BN-001057,Bin service point   11 South side,  Kenmore ,4069,-27.378130,152.936291,Active,2006-04-06
+SL-001058,Street light   138 East side,indooroopilly,4068,-27.496648,152.958668,ACTIVE,28/2/2021
+PK-001059,Park asset   61 East side,PADDINGTON,4064,-27.517723,153.010750,active,
+DR-001060,Stormwater drain   66 East side,  Indooroopilly ,4068,-27.566352,153.117567,active,
+rd-009009,Road segment   85 East side,New Farm,4005,-27.457200,153.003119,ACTIVE,last winter
+PK-001061,Park asset   157 West side,Carindale,4152,-27.392101,153.059239,active,2022-04-08
+sg-001062,Street sign   89 South side,  Paddington ,4064,-27.559441,152.972196,Under repair,16/1/2006
+DR-001063,Stormwater drain   38 South side,Paddington,4064,-27.534310,152.982387,Active,8/3/2016
+RD-001064,Road segment   115 South side,indooroopilly,4068,-27.584637,152.907390,Under repair,25/5/2000
+RD-001065,Road segment   91 North side,indooroopilly,4068,-27.430318,153.038914,active,2021-09-23
+rd-001066,Road segment   90 West side,paddington,4064,-27.470459,153.029615,Decommissioned,
+SL-001067,Street light   2 South side,  Sunnybank ,4109,-27.458480,153.080871,ACTIVE,
+SG-001068,Street sign   102 South side,wynnum,4178,-27.411915,152.981706,active,2008-02-01
+SG-001069,Street sign   60 East side,indooroopilly,4068,-27.437078,153.048642,Under repair,26/4/2016
+SL-001070,Street light   167 South side,Carindale,4152,-27.356089,153.026877,active,2022-03-26
+SL-001071,Street light   145 West side,KENMORE,4069,-27.353870,153.033373,Decommissioned,
+SG-001072,Street sign   56 East side,  Chermside ,4032,-27.486134,153.063205,Under repair,
+PK-001073,Park asset   58 South side,West End,4101,-27.537733,153.029693,ACTIVE,
+bn-001074,Bin service point   175 North side,Carindale,4152,-27.449306,153.025139,Under repair,
+SG-001075,Street sign   48 West side,new farm,4005,-27.558554,152.932290,ACTIVE,11/9/2013
+PK-001076,Park asset   7 East side,Indooroopilly,4068,-27.457406,153.046738,Decommissioned,
+DR-001077,Stormwater drain   163 South side,paddington,4064,-27.425462,152.998535,Decommissioned,
+PK-001078,Park asset   173 West side,Sunnybank,4109,-27.447093,152.978060,Under repair,11/1/2017
+PK-001079,Park asset   97 East side,CARINDALE,4152,-27.550543,153.027363,Decommissioned,
+pk-001080,Park asset   177 East side,Nundah,4012,-27.411467,152.912060,Active,
+DR-001081,Stormwater drain   69 West side,  New Farm ,4005,-27.418004,152.962154,ACTIVE,5/11/2004
+SL-001082,Street light   101 South side,Paddington,4064,-27.369966,152.989727,active,2006-07-28
+SL-001083,Street light   131 West side,chermside,4032,-27.489485,153.054947,Under repair,11/11/2019
+SG-001084,Street sign   127 South side,chermside,4032,-27.508077,153.065559,Under repair,2012-06-23
+sg-001085,Street sign   135 North side,chermside,4032,-27.401737,153.072608,active,2006-09-26
+PK-001086,Park asset   45 North side,  Sunnybank ,4109,-27.353413,152.903638,Decommissioned,17/4/2005
+dr-001087,Stormwater drain   151 East side,nundah,4012,-27.584041,152.905843,Under repair,
+sg-001088,Street sign   144 West side,carindale,4152,-27.414610,153.025353,Under repair,
+sg-001089,Street sign   51 North side,  Sunnybank ,4109,-27.387721,153.129895,Under repair,27/12/2014
+pk-001090,Park asset   137 South side,New Farm,4005,-27.485211,152.916573,ACTIVE,
+dr-001091,Stormwater drain   112 South side,chermside,4032,-27.406122,153.116561,Under repair,15/11/1999
+DR-001092,Stormwater drain   2 North side,Wynnum,4178,-27.522727,153.071477,ACTIVE,13/3/2025
+sl-001093,Street light   69 East side,ANNERLEY,4103,-27.544286,153.096989,ACTIVE,2025-01-11
+sg-001094,Street sign   168 North side,chermside,4032,-27.484907,152.978067,Under repair,28/2/2014
+dr-001095,Stormwater drain   77 South side,WYNNUM,4178,-27.351810,152.927675,Under repair,
+SG-001096,Street sign   34 South side,NUNDAH,4012,-27.530033,153.001028,Under repair,2006-05-04
+dr-001097,Stormwater drain   1 West side,New Farm,4005,-27.529520,152.958567,ACTIVE,15/11/2004
+pk-001098,Park asset   167 West side,West End,4101,-27.491059,152.930539,Active,16/10/2025
+bn-001099,Bin service point   14 North side,wynnum,4178,-27.520274,153.075546,Active,1999-06-10
+rd-001100,Road segment   125 North side,carindale,4152,-27.418453,153.059388,active,1999-11-22
+sl-009007,Street light   142 East side,PADDINGTON,4064,-33.868800,151.209300,Active,19/2/2024
+bn-001101,Bin service point   44 East side,PADDINGTON,4064,-27.457006,153.053242,active,1/2/2002
+SL-001102,Street light   180 East side,Carindale,4152,-27.527611,153.041864,Under repair,
+RD-001103,Road segment   157 East side,INDOOROOPILLY,4068,-27.522122,153.027840,active,
+RD-001104,Road segment   166 North side,sunnybank,4109,-27.508391,152.956995,active,2018-03-21
+ZZ-009002,Road segment   153 South side,  Carindale ,4152,-27.579020,153.045006,Active,
+pk-001105,Park asset   113 South side,new farm,4005,-27.472965,153.131867,ACTIVE,22/6/2014
+rd-001106,Road segment   81 North side,  Sunnybank ,4109,-27.406228,153.020636,Active,2006-03-18
+bn-001107,Bin service point   6 West side,PADDINGTON,4064,-27.401543,153.094391,ACTIVE,23/11/1999
+PK-001108,Park asset   36 South side,Indooroopilly,4068,-27.425033,153.022223,Under repair,6/8/2025
+dr-001109,Stormwater drain   127 West side,INDOOROOPILLY,4068,-27.477049,153.136077,active,
+dr-001110,Stormwater drain   180 South side,TOOWONG,4066,-27.577410,152.918295,Active,27/3/2001
+dr-001111,Stormwater drain   58 East side,  Indooroopilly ,4068,-27.487816,153.133819,Active,1999-10-24
+SL-001112,Street light   79 West side,  Chermside ,4032,-27.373360,153.063146,active,
+sg-001113,Street sign   70 East side,Kenmore,4069,-27.513770,152.929628,Decommissioned,
+bn-001114,Bin service point   83 West side,  Paddington ,4064,-27.365226,153.047930,ACTIVE,
+rd-001115,Road segment   63 West side,Sunnybank,4109,-27.407449,153.101678,Under repair,21/12/2002
+dr-001116,Stormwater drain   109 West side,  Nundah ,4012,-27.476181,153.063669,ACTIVE,
+rd-001117,Road segment   66 West side,WYNNUM,4178,-27.483813,152.945311,ACTIVE,
+rd-001118,Road segment   65 North side,Chermside,4032,-27.544478,153.046021,Under repair,7/5/2023
+pk-001119,Park asset   96 South side,Paddington,4064,-27.526507,153.015086,Under repair,25/4/2020
+SG-001120,Street sign   29 East side,Chermside,4032,-27.519836,153.001825,Under repair,
+rd-001121,Road segment   139 East side,CHERMSIDE,4032,-27.586249,153.028425,Under repair,
+DR-001122,Stormwater drain   83 East side,chermside,4032,-27.531739,153.047416,Active,2001-01-05
+BN-001123,Bin service point   117 East side,  Nundah ,4012,-27.549206,152.926358,active,2010-07-01
+bn-001124,Bin service point   19 North side,  Paddington ,4064,-27.454456,153.101061,Under repair,2011-08-19
+BN-001125,Bin service point   105 South side,  Nundah ,4012,-27.571584,152.925106,Active,15/1/2005
+RD-009004,Road segment   97 West side,  New Farm ,2000,-27.570617,153.138331,ACTIVE,
+SL-001126,Street light   83 East side,Annerley,4103,-27.565524,153.031397,ACTIVE,21/9/2006
+bn-001127,Bin service point   161 East side,annerley,4103,-27.430995,152.943981,Active,19/11/1999
+BN-001128,Bin service point   4 West side,New Farm,4005,-27.364392,153.135672,Under repair,1999-09-08
+rd-001129,Road segment   168 West side,CHERMSIDE,4032,-27.500247,153.131112,ACTIVE,
+RD-001130,Road segment   138 East side,  Indooroopilly ,4068,-27.545355,153.015087,Decommissioned,2014-07-06
+PK-001131,Park asset   70 West side,  Wynnum ,4178,-27.485600,152.931984,Under repair,8/10/2006
+SG-001132,Street sign   130 East side,  Kenmore ,4069,-27.491553,153.108782,Decommissioned,22/12/2015
+PK-001133,Park asset   5 East side,  Sunnybank ,4109,-27.562069,153.053311,active,2007-06-03
+bn-001134,Bin service point   87 South side,SUNNYBANK,4109,-27.489007,153.010896,ACTIVE,19/10/2013
+BN-001135,Bin service point   88 South side,  Wynnum ,4178,-27.522873,152.933028,active,18/10/2000
+pk-001136,Park asset   180 West side,Nundah,4012,-27.584383,152.958478,ACTIVE,
+SG-009011,Street sign   124 West side,west end,,-27.442640,153.092335,Decommissioned,
+bn-001137,Bin service point   56 East side,SUNNYBANK,4109,-27.445844,153.138554,Under repair,25/12/2006
+PK-001138,Park asset   32 East side,nundah,4012,-27.376742,153.072349,Active,2025-08-17
+dr-001139,Stormwater drain   146 East side,chermside,4032,-27.420574,153.079584,active,
+sg-001140,Street sign   167 East side,sunnybank,4109,-27.466562,153.069875,ACTIVE,
+bn-001141,Bin service point   60 South side,New Farm,4005,-27.416876,153.028712,ACTIVE,11/3/2003
+sg-001142,Street sign   157 North side,Chermside,4032,-27.353055,153.022331,Active,
+BN-001143,Bin service point   92 East side,chermside,4032,-27.392896,152.995634,Under repair,
+PK-001144,Park asset   61 South side,ANNERLEY,4103,-27.527420,153.021144,active,15/3/2020
+pk-001145,Park asset   109 West side,Annerley,4103,-27.453248,152.913614,Decommissioned,
+sl-001146,Street light   88 East side,Nundah,4012,-27.396891,153.035814,ACTIVE,2011-03-26
+bn-001147,Bin service point   157 South side,  Paddington ,4064,-27.493330,152.928025,ACTIVE,
+SL-001148,Street light   129 North side,NUNDAH,4012,-27.460475,153.080489,Active,2024-06-15
+rd-001149,Road segment   37 East side,paddington,4064,-27.377839,153.073485,ACTIVE,
+pk-001150,Park asset   46 North side,Chermside,4032,-27.412139,153.091139,Active,2011-08-18
+sl-009003,Street light   158 North side,,4032,-27.468559,153.085063,Decommissioned,2024-07-04
+PK-001151,Park asset   17 North side,  Carindale ,4152,-27.466981,152.993202,Decommissioned,
+sl-001152,Street light   60 East side,  Chermside ,4032,-27.493548,152.956382,ACTIVE,22/8/2025
+PK-001153,Park asset   20 South side,SUNNYBANK,4109,-27.503928,152.978785,ACTIVE,
+DR-001154,Stormwater drain   99 South side,Toowong,4066,-27.399187,153.038379,active,
+rd-001155,Road segment   31 North side,  Indooroopilly ,4068,-27.541877,152.933941,Under repair,
+DR-001156,Stormwater drain   142 South side,West End,4101,-27.489771,152.969551,active,26/11/2024
+SL-001157,Street light   143 South side,Annerley,4103,-27.396961,153.064758,Active,20/10/2002
+rd-001158,Road segment   139 North side,Toowong,4066,-27.435508,152.930014,Active,2021-05-09
+sl-001159,Street light   36 East side,CARINDALE,4152,-27.396646,152.950709,Under repair,16/11/1998
+sl-001160,Street light   120 East side,Kenmore,4069,-27.425965,153.064142,Active,
+RD-001161,Road segment   58 West side,  Sunnybank ,4109,-27.357082,152.900275,Active,13/9/2020
+dr-001162,Stormwater drain   83 South side,NUNDAH,4012,-27.452463,153.112800,active,
+PK-001163,Park asset   177 South side,  Wynnum ,4178,-27.406980,153.052386,ACTIVE,
+bn-001164,Bin service point   19 West side,sunnybank,4109,-27.549041,153.135919,Active,19/8/2009
+bn-001165,Bin service point   124 North side,CHERMSIDE,4032,-27.388448,152.903046,Decommissioned,
+sl-001166,Street light   64 South side,ANNERLEY,4103,-27.431349,153.084594,active,23/11/2017
+sl-001167,Street light   163 North side,WYNNUM,4178,-27.481155,153.068126,Decommissioned,2013-12-06
+rd-001168,Road segment   30 West side,west end,4101,-27.375319,153.057731,ACTIVE,2016-12-27
+sl-001169,Street light   145 East side,SUNNYBANK,4109,-27.420976,152.977286,Active,
+SL-001170,Street light   121 North side,Toowong,4066,-27.447122,153.081372,ACTIVE,
+dr-001171,Stormwater drain   153 West side,SUNNYBANK,4109,-27.529966,153.004745,Active,2019-04-22
+SL-001172,Street light   63 West side,wynnum,4178,-27.501545,153.035957,active,2022-05-14
+dr-001173,Stormwater drain   89 East side,Wynnum,4178,-27.358166,153.064171,active,27/5/2024
+dr-001174,Stormwater drain   154 North side,INDOOROOPILLY,4068,-27.360655,153.103534,ACTIVE,18/12/2017
+sl-001175,Street light   49 East side,West End,4101,-27.564654,153.061741,Under repair,23/2/2008
+DR-001176,Stormwater drain   151 North side,  New Farm ,4005,-27.421452,153.097120,active,5/1/2019
+SL-001177,Street light   70 North side,  Kenmore ,4069,-27.353820,153.116169,ACTIVE,22/5/2024
+BN-001178,Bin service point   175 West side,CHERMSIDE,4032,-27.414668,152.968982,Active,2000-10-02
+SG-001179,Street sign   50 West side,  New Farm ,4005,-27.376907,152.981633,active,
+bn-001180,Bin service point   19 North side,Sunnybank,4109,-27.478957,152.963736,active,28/9/2018
+PK-001181,Park asset   174 North side,NEW FARM,4005,-27.422324,152.967824,Active,2025-12-03
+RD-001182,Road segment   73 East side,Paddington,4064,-27.456673,153.031985,Active,9/2/1999
+sl-001183,Street light   115 East side,Indooroopilly,4068,-27.372346,153.017783,Active,2020-06-22
+pk-001184,Park asset   9 West side,Nundah,4012,-27.478782,153.127143,ACTIVE,2000-11-20
+SG-001185,Street sign   37 West side,  Toowong ,4066,-27.536593,153.073799,ACTIVE,
+PK-001186,Park asset   156 East side,  New Farm ,4005,-27.526584,153.005658,ACTIVE,2002-02-21
+sl-001187,Street light   67 North side,WYNNUM,4178,-27.573297,153.134598,Active,2022-06-26
+sl-001188,Street light   163 East side,annerley,4103,-27.474607,153.069137,Decommissioned,
+SL-001189,Street light   74 South side,Toowong,4066,-27.518013,153.132850,Under repair,2003-12-16
+rd-001190,Road segment   131 South side,Kenmore,4069,-27.503964,152.982048,active,13/1/2008
+PK-001191,Park asset   176 South side,Carindale,4152,-27.382764,152.993295,Under repair,
+pk-001192,Park asset   138 West side,PADDINGTON,4064,-27.574879,152.990790,active,
+SG-001193,Street sign   33 South side,  Sunnybank ,4109,-27.356237,152.922454,Decommissioned,
+SL-001194,Street light   53 South side,chermside,4032,-27.399998,152.953643,Under repair,2006-05-04
+sl-001195,Street light   146 West side,nundah,4012,-27.359468,152.932439,Active,2001-06-20
+DR-001196,Stormwater drain   126 North side,  Carindale ,4152,-27.435441,153.133481,ACTIVE,21/11/2006
+sl-001197,Street light   86 East side,NEW FARM,4005,-27.452279,153.016393,Active,
+sl-001198,Street light   74 East side,PADDINGTON,4064,-27.388242,153.056563,active,2013-03-06
+,Bin service point   11 South side,  West End ,4101,-27.583552,153.128477,Decommissioned,
+RD-001199,Road segment   59 North side,Indooroopilly,4068,-27.498934,153.024654,Active,2018-11-25
+bn-001200,Bin service point   122 East side,WYNNUM,4178,-27.414804,153.043100,active,2021-02-03
+SL-001201,Street light   36 East side,  Indooroopilly ,4068,-27.494425,153.071687,ACTIVE,2018-10-27
+BN-001202,Bin service point   162 West side,KENMORE,4069,-27.425134,152.954268,ACTIVE,4/1/2009
+rd-001203,Road segment   94 East side,West End,4101,-27.537688,153.121301,Under repair,
+sg-001204,Street sign   79 West side,  Sunnybank ,4109,-27.400791,152.944869,Under repair,
+BN-001205,Bin service point   72 West side,  New Farm ,4005,-27.401919,153.092027,Active,
+rd-001206,Road segment   4 West side,Sunnybank,4109,-27.526007,152.913148,Active,
+RD-001207,Road segment   102 East side,kenmore,4069,-27.581384,153.080199,Active,
+SL-001208,Street light   17 South side,carindale,4152,-27.504092,152.948100,Active,
+RD-001209,Road segment   91 South side,  West End ,4101,-27.505035,153.071280,Active,2021-01-24
+sg-001210,Street sign   141 East side,ANNERLEY,4103,-27.563067,153.108917,Active,2/6/2019
+DR-001211,Stormwater drain   57 West side,  Sunnybank ,4109,-27.487484,152.927260,Active,28/9/2024
+sl-001212,Street light   16 West side,sunnybank,4109,-27.381821,153.066662,active,2003-08-11
+dr-001213,Stormwater drain   167 East side,chermside,4032,-27.545924,153.066774,active,2008-12-05
+SG-001214,Street sign   141 West side,ANNERLEY,4103,-27.448264,153.063053,Decommissioned,
+bn-001215,Bin service point   96 West side,annerley,4103,-27.427822,153.097566,Decommissioned,
+bn-009006,Bin service point   99 West side,WYNNUM,4178,north-ish,153.126485,active,8/10/2016
+BN-001216,Bin service point   21 West side,NUNDAH,4012,-27.413672,153.081579,Under repair,2011-03-13
+SL-001217,Street light   104 West side,Carindale,4152,-27.432598,152.967286,Active,2015-03-17
+bn-001218,Bin service point   169 East side,  Kenmore ,4069,-27.482292,152.997960,Active,20/7/2015
+SG-001219,Street sign   119 East side,CARINDALE,4152,-27.574802,152.907119,Under repair,2015-06-21
+dr-001220,Stormwater drain   170 East side,  Chermside ,4032,-27.529189,153.003969,Decommissioned,20/7/2023
+sl-001221,Street light   107 North side,Wynnum,4178,-27.409839,153.047829,ACTIVE,13/8/2012
+DR-001222,Stormwater drain   105 East side,paddington,4064,-27.453353,153.117203,active,
+RD-001223,Road segment   122 East side,annerley,4103,-27.475701,152.902206,Under repair,2021-12-01
+sl-001224,Street light   20 East side,annerley,4103,-27.581586,152.992450,Under repair,2008-06-02
+rd-009005,Road segment   34 South side,kenmore,40X4,-27.571979,153.051411,ACTIVE,2011-02-13
+SL-001225,Street light   71 South side,ANNERLEY,4103,-27.399438,152.981353,Under repair,8/2/2015
+RD-001226,Road segment   102 South side,  Sunnybank ,4109,-27.530857,152.978739,Decommissioned,
+DR-001227,Stormwater drain   20 West side,  Carindale ,4152,-27.454701,153.010132,active,
+PK-001228,Park asset   14 West side,west end,4101,-27.364449,152.982106,Active,
+RD4512,Street sign   156 West side,Annerley,4103,-27.376951,152.946960,ACTIVE,
+PK-001229,Park asset   151 North side,  West End ,4101,-27.558877,152.936575,Active,28/12/2005
+RD-001230,Road segment   72 South side,TOOWONG,4066,-27.506261,152.978115,Active,2022-02-20
+SG-001231,Street sign   121 North side,wynnum,4178,-27.427162,153.000207,active,
+sl-001232,Street light   110 East side,CARINDALE,4152,-27.565641,153.055247,Decommissioned,
+sg-001233,Street sign   158 South side,WYNNUM,4178,-27.427405,152.971562,Under repair,2018-03-11
+RD-001234,Road segment   111 East side,Nundah,4012,-27.543299,153.018239,Decommissioned,21/12/2025
+bn-001235,Bin service point   9 South side,Annerley,4103,-27.376289,153.032205,active,21/1/2020
+pk-001236,Park asset   84 North side,TOOWONG,4066,-27.459865,152.904847,Active,2023-10-08
+dr-001237,Stormwater drain   14 East side,toowong,4066,-27.354798,153.047410,Under repair,

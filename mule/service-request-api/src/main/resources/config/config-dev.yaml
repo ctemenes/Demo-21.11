@@ -1,0 +1,20 @@
+# Non-secret settings. Secrets (servicebus.key, works.key, assetfile.sas) are
+# never stored in the repository: the pipeline reads them from Azure at deploy
+# time and passes them to CloudHub as secured properties.
+http:
+  port: "8081"
+app:
+  name: "service-request-api"
+  environment: "dev"
+servicebus:
+  namespace: "set-at-deploy"
+  keyName: "mule-send"
+  queue: "service-requests"
+works:
+  host: "set-at-deploy"
+  basePath: "/api"
+assetfile:
+  host: "set-at-deploy"
+  path: "/asset-register/asset-register.csv"
+etl:
+  cron: "0 0 2 * * ?"

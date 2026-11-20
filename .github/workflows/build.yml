@@ -1,0 +1,43 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  works-system-tests:
+    name: Works system (Python) tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pytest
+      - run: python -m pytest -q azure/functions/tests
+      - name: Sample data still has the expected good and bad rows
+        run: python data/make_asset_register.py && git diff --exit-code data/asset-register.csv
+
+  mule-package:
+    name: Package the Mule application
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: The Mule app carries the same contract as /api
+        run: diff api/service-request-api.yaml mule/service-request-api/src/main/resources/api/service-request-api.yaml
+      - run: mvn -B -ntp -f mule/service-request-api/pom.xml clean package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: service-request-api
+          path: mule/service-request-api/target/*.jar
+          if-no-files-found: error

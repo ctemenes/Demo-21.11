@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+        http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd">
+
+    <!-- env is passed at deploy time. It picks the config file. -->
+    <global-property name="env" value="dev" doc:name="Default environment"/>
+    <configuration-properties file="config/config-${env}.yaml" doc:name="Environment settings"/>
+
+    <http:listener-config name="api-http-listener" doc:name="API listener">
+        <http:listener-connection host="0.0.0.0" port="${http.port}"/>
+    </http:listener-config>
+
+    <apikit:config name="service-request-api-config"
+                   api="api/service-request-api.yaml"
+                   outboundHeadersMapName="outboundHeaders"
+                   httpStatusVarName="httpStatus"
+                   doc:name="Service Request API contract"/>
+
+    <!-- Queue for the works management system. Send-only key. -->
+    <azure-service-bus-messaging:config name="service-bus-config" doc:name="Works management queue">
+        <azure-service-bus-messaging:sas-connection
+            namespace="${servicebus.namespace}"
+            sharedAccessKeyName="${servicebus.keyName}"
+            sharedAccessKey="${servicebus.key}"/>
+    </azure-service-bus-messaging:config>
+
+    <!-- Works management system API (Azure). -->
+    <http:request-config name="works-system-api" basePath="${works.basePath}" responseTimeout="20000" doc:name="Works system API">
+        <http:request-connection protocol="HTTPS" host="${works.host}" port="443"/>
+    </http:request-config>
+
+    <!-- Where the asset register export is dropped each night. -->
+    <http:request-config name="asset-file-store" responseTimeout="60000" doc:name="Asset file store">
+        <http:request-connection protocol="HTTPS" host="${assetfile.host}" port="443"/>
+    </http:request-config>
+
+    <!-- One error handler for the whole API: every failure becomes the same
+         JSON error shape with the right status code. -->
+    <error-handler name="api-error-handler">
+        <on-error-propagate type="APIKIT:BAD_REQUEST" doc:name="400">
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("BAD_REQUEST", "The request does not match the API contract.", correlationId, [error.description default ""])]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">400</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:NOT_FOUND, SR:NOT_FOUND" doc:name="404">
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("NOT_FOUND", "Nothing was found at that address or tracking id.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">404</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED" doc:name="405">
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("METHOD_NOT_ALLOWED", "That method is not supported here.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">405</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:NOT_ACCEPTABLE" doc:name="406">
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("NOT_ACCEPTABLE", "The API answers in application/json only.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">406</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:name="415">
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("UNSUPPORTED_MEDIA_TYPE", "Send the body as application/json.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">415</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="SR:DOWNSTREAM_UNAVAILABLE, MULE:RETRY_EXHAUSTED, HTTP:CONNECTIVITY, HTTP:TIMEOUT, HTTP:SERVICE_UNAVAILABLE" doc:name="503">
+            <logger level="ERROR" category="au.digitalaura.servicerequests"
+                    message='#["Downstream unavailable correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("DOWNSTREAM_UNAVAILABLE", "A downstream system could not be reached. Nothing was lost. Please retry.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">503</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+        <on-error-propagate type="ANY" doc:name="500">
+            <logger level="ERROR" category="au.digitalaura.servicerequests"
+                    message='#["Unhandled error correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
+            <ee:transform>
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+import * from modules::errors
+---
+errorBody("INTERNAL_ERROR", "Something went wrong on our side. Quote the correlation id when you report it.", correlationId)]]></ee:set-payload>
+                </ee:message>
+                <ee:variables><ee:set-variable variableName="httpStatus">500</ee:set-variable></ee:variables>
+            </ee:transform>
+        </on-error-propagate>
+    </error-handler>
+</mule>

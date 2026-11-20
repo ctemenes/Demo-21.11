@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:azure-service-bus-messaging="http://www.mulesoft.org/schema/mule/azure-service-bus-messaging"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+        http://www.mulesoft.org/schema/mule/azure-service-bus-messaging http://www.mulesoft.org/schema/mule/azure-service-bus-messaging/current/mule-azure-service-bus-messaging.xsd">
+
+    <!-- Entry point. APIkit checks every request against the OpenAPI contract
+         before any of our code runs. -->
+    <flow name="service-request-api-main">
+        <http:listener config-ref="api-http-listener" path="/api/*" doc:name="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[(vars.outboundHeaders default {}) ++ {"x-correlation-id": correlationId}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[(vars.outboundHeaders default {}) ++ {"x-correlation-id": correlationId}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="service-request-api-config" doc:name="Route by contract"/>
+        <error-handler ref="api-error-handler"/>
+    </flow>
+
+    <!-- POST /service-requests: validate, map, queue, answer. -->
+    <flow name="post:\service-requests:application\json:service-request-api-config">
+        <set-variable variableName="receivedAt" doc:name="Stamp received time"
+                      value='#[(now() >> "Australia/Brisbane") as String {format: "yyyy-MM-dd&apos;T&apos;HH:mm:ssXXX"}]'/>
+        <set-variable variableName="trackingId" doc:name="Issue tracking id"
+                      value='#["SR-" ++ ((now() >> "Australia/Brisbane") as String {format: "yyyyMMdd"}) ++ "-" ++ upper((uuid() replace "-" with "")[0 to 5])]'/>
+        <ee:transform doc:name="Public request to canonical message">
+            <ee:message>
+                <ee:set-payload resource="dwl/to-canonical.dwl"/>
+            </ee:message>
+        </ee:transform>
+        <set-variable variableName="canonical" value="#[payload]" doc:name="Keep canonical message"/>
+        <!-- Logs carry ids and routing only. Reporter details are never logged. -->
+        <logger level="INFO" category="au.digitalaura.servicerequests" doc:name="Log accepted"
+                message='#["Accepted trackingId=$(vars.trackingId) correlationId=$(correlationId) category=$(vars.canonical.request.category) department=$(vars.canonical.routing.department)"]'/>
+        <until-successful maxRetries="2" millisBetweenRetries="1000" doc:name="Queue with retry">
+            <azure-service-bus-messaging:send config-ref="service-bus-config"
+                                               destinationName="${servicebus.queue}"
+                                               messageId="#[vars.trackingId]"
+                                               correlationId="#[correlationId]"
+                                               label="service-request.v1"
+                                               doc:name="Send to works management queue">
+                <azure-service-bus-messaging:body><![CDATA[#[write(vars.canonical, "application/json")]]]></azure-service-bus-messaging:body>
+            </azure-service-bus-messaging:send>
+        </until-successful>
+        <logger level="INFO" category="au.digitalaura.servicerequests" doc:name="Log queued"
+                message='#["Queued trackingId=$(vars.trackingId) correlationId=$(correlationId) queue=$(p("servicebus.queue"))"]'/>
+        <ee:transform doc:name="Receipt">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    trackingId: vars.trackingId,
+    status: "RECEIVED",
+    receivedAt: vars.receivedAt,
+    department: vars.canonical.routing.department,
+    targetResolutionHours: vars.canonical.routing.slaHours,
+    links: { self: "/api/service-requests/" ++ vars.trackingId }
+}]]></ee:set-payload>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="httpStatus">202</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+    </flow>
+
+    <!-- GET /service-requests/{trackingId}: ask the works system, map to the public shape. -->
+    <flow name="get:\service-requests\(trackingId):service-request-api-config">
+        <set-variable variableName="trackingId" value="#[attributes.uriParams.trackingId]" doc:name="Tracking id"/>
+        <http:request method="GET" config-ref="works-system-api" path="/service-requests/{trackingId}" doc:name="Works system: get request">
+            <http:headers>#[{"x-functions-key": p("works.key"), "x-correlation-id": correlationId}]</http:headers>
+            <http:uri-params>#[{trackingId: vars.trackingId}]</http:uri-params>
+            <http:response-validator>
+                <http:success-status-code-validator values="200,404"/>
+            </http:response-validator>
+        </http:request>
+        <choice doc:name="Found?">
+            <when expression="#[attributes.statusCode == 404]">
+                <raise-error type="SR:NOT_FOUND" description="No service request with that tracking id."/>
+            </when>
+            <otherwise>
+                <ee:transform doc:name="Works record to public status">
+                    <ee:message>
+                        <ee:set-payload resource="dwl/to-public-status.dwl"/>
+                    </ee:message>
+                </ee:transform>
+            </otherwise>
+        </choice>
+    </flow>
+
+    <!-- GET /health -->
+    <flow name="get:\health:service-request-api-config">
+        <ee:transform doc:name="Health">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    status: "UP",
+    application: p("app.name"),
+    environment: p("app.environment"),
+    time: (now() >> "Australia/Brisbane") as String {format: "yyyy-MM-dd'T'HH:mm:ssXXX"}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>
