@@ -15,14 +15,17 @@ if [ -z "$APP_ID" ]; then
 fi
 SP_ID="$(az ad sp show --id "$APP_ID" --query id -o tsv)"
 
-if ! az ad app federated-credential list --id "$APP_ID" --query "[?name=='main-branch'] | [0].name" -o tsv | grep -q main-branch; then
-  az ad app federated-credential create --id "$APP_ID" --parameters "{
-    \"name\": \"main-branch\",
-    \"issuer\": \"https://token.actions.githubusercontent.com\",
-    \"subject\": \"repo:${REPO}:ref:refs/heads/main\",
-    \"audiences\": [\"api://AzureADTokenExchange\"]
-  }" --output none
+# The subject must match what GitHub puts in its token exactly. Newer repositories
+# use an immutable form with numeric ids (repo:owner@id/name@id:ref:...). If sign-in
+# fails with AADSTS700213, the error shows the subject to pass in as SUBJECT.
+SUBJECT="${SUBJECT:-repo:${REPO}:ref:refs/heads/main}"
+CREDENTIAL="{\"name\": \"main-branch\", \"issuer\": \"https://token.actions.githubusercontent.com\", \"subject\": \"${SUBJECT}\", \"audiences\": [\"api://AzureADTokenExchange\"]}"
+if az ad app federated-credential list --id "$APP_ID" --query "[?name=='main-branch'] | [0].name" -o tsv | grep -q main-branch; then
+  az ad app federated-credential update --id "$APP_ID" --federated-credential-id main-branch --parameters "$CREDENTIAL" --output none
+else
+  az ad app federated-credential create --id "$APP_ID" --parameters "$CREDENTIAL" --output none
 fi
+echo "Azure trusts tokens with subject: $SUBJECT"
 
 # Scoped to this one resource group. Owner is needed because the Bicep template
 # creates role assignments for the Function App's identity.
