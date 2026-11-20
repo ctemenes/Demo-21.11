@@ -1,5 +1,5 @@
 %dw 2.0
-output application/json
+output application/java
 import try from dw::Runtime
 
 // One row of the asset register CSV -> the works system's asset record.
