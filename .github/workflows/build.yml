@@ -19,7 +19,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install pytest
-      - run: python -m pytest -q azure/functions/tests
+      - run: python -m pytest -q tests
+        working-directory: azure/functions
       - name: Sample data still has the expected good and bad rows
         run: python data/make_asset_register.py && git diff --exit-code data/asset-register.csv
 
