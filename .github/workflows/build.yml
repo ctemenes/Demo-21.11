@@ -45,18 +45,37 @@ jobs:
           path: mule/service-request-api/target/*.jar
           if-no-files-found: error
 
+  deploy-gate:
+    name: Is deployment configured?
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+        run: |
+          if [ -n "$ANYPOINT_CLIENT_ID" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; else echo "ready=false" >> "$GITHUB_OUTPUT"; echo "Anypoint connected app secrets are not set, so deployment is skipped."; fi
+
   deploy:
     name: Deploy to CloudHub 2.0 and test end to end
-    needs: [works-system-tests, mule-package]
-    if: github.event_name != 'pull_request' && vars.DEPLOY_ENABLED == 'true'
+    needs: [works-system-tests, mule-package, deploy-gate]
+    if: needs.deploy-gate.outputs.ready == 'true'
     runs-on: ubuntu-latest
     concurrency: deploy-dev
     permissions:
       id-token: write
       contents: read
     env:
-      RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+      RG: rg-service-request-integration-dev
       POM: mule/service-request-api/pom.xml
+      # Identifiers, not secrets. The pipeline holds no Azure password or key: Azure
+      # trusts a short-lived token issued to the main branch of this repository only.
+      AZURE_CLIENT_ID: a10bea01-1038-4736-874b-79cdd71afd61
+      AZURE_TENANT_ID: e7a720e0-1a93-4aea-9295-1e01719c5a43
+      AZURE_SUBSCRIPTION_ID: 39381496-a5a0-411b-a08b-c01e9c243918
+      MULE_BASE_URL: ''
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -67,9 +86,9 @@ jobs:
       - name: Sign in to Azure (OpenID Connect, no stored secret)
         uses: azure/login@v2
         with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
       - name: Read settings and secrets from Azure
         run: bash scripts/mule-secrets.sh
       - name: Maven credentials for Anypoint (connected app)
@@ -97,5 +116,5 @@ jobs:
             -Dservicebus.namespace="$SB_NAMESPACE" -Dworks.host="$WORKS_HOST" -Dassetfile.host="$ASSET_HOST" \
             -Dservicebus.key="$SB_KEY" -Dworks.key="$WORKS_KEY" -Dassetfile.sas="$ASSET_SAS"
       - name: End-to-end smoke test
-        if: vars.MULE_BASE_URL != ''
-        run: python3 scripts/smoke_test.py --base-url "${{ vars.MULE_BASE_URL }}"
+        if: env.MULE_BASE_URL != ''
+        run: python3 scripts/smoke_test.py --base-url "$MULE_BASE_URL"
