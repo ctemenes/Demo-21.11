@@ -12,7 +12,7 @@ NS_ID="$(az servicebus namespace show -g "$RG" -n "$NS" --query id -o tsv)"
 az role assignment create --assignee-object-id "$ME" --assignee-principal-type User \
   --role "Azure Service Bus Data Sender" --scope "$NS_ID" --output none 2>/dev/null || true
 
-ID="SR-$(date -u +%Y%m%d)-$(tr -dc 'A-Z0-9' </dev/urandom | head -c 6)"
+ID="SR-$(date -u +%Y%m%d)-$(openssl rand -hex 3 | tr 'a-f' 'A-F')"
 BODY=$(cat <<JSON
 {"schemaVersion":"1.0","trackingId":"$ID","correlationId":"azure-side-test","receivedAt":"$(date -u +%Y-%m-%dT%H:%M:%S)+00:00",
  "source":{"system":"test-azure-side","channel":"web"},
