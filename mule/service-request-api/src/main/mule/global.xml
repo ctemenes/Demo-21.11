@@ -108,7 +108,7 @@ errorBody("UNSUPPORTED_MEDIA_TYPE", "Send the body as application/json.", correl
                 <ee:variables><ee:set-variable variableName="httpStatus">415</ee:set-variable></ee:variables>
             </ee:transform>
         </on-error-propagate>
-        <on-error-propagate type="SR:DOWNSTREAM_UNAVAILABLE, MULE:RETRY_EXHAUSTED, HTTP:CONNECTIVITY, HTTP:TIMEOUT, HTTP:SERVICE_UNAVAILABLE" doc:name="503">
+        <on-error-propagate type="MULE:RETRY_EXHAUSTED, HTTP:CONNECTIVITY, HTTP:TIMEOUT, HTTP:SERVICE_UNAVAILABLE" doc:name="503">
             <logger level="ERROR" category="au.digitalaura.servicerequests"
                     message='#["Downstream unavailable correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
             <ee:transform>
