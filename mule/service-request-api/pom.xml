@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- groupId is replaced with the Anypoint organisation id by the pipeline
-         when it publishes to Exchange for a CloudHub 2.0 deployment. -->
-    <groupId>au.digitalaura.integration</groupId>
+    <!-- CloudHub 2.0 deploys from Exchange, and Exchange requires the groupId
+         to be the Anypoint organisation id. -->
+    <groupId>a55f04d7-3fe1-4e5a-b2b4-83b39bda33af</groupId>
     <artifactId>service-request-api</artifactId>
     <version>1.0.0</version>
     <packaging>mule-application</packaging>
@@ -21,7 +21,30 @@
         <sockets.connector.version>1.2.10</sockets.connector.version>
         <apikit.version>1.13.6</apikit.version>
         <servicebus.connector.version>3.8.3</servicebus.connector.version>
+
+        <!-- Deployment settings. The pipeline supplies the values that differ per
+             environment, and every secret, on the command line. -->
+        <anypoint.environment>Sandbox</anypoint.environment>
+        <anypoint.target>Cloudhub-US-East-2</anypoint.target>
+        <anypoint.muleVersion>4.13.2</anypoint.muleVersion>
+        <anypoint.appName>service-request-api-dev</anypoint.appName>
+        <deploy.env>dev</deploy.env>
+        <servicebus.namespace>set-by-pipeline</servicebus.namespace>
+        <works.host>set-by-pipeline</works.host>
+        <assetfile.host>set-by-pipeline</assetfile.host>
+        <servicebus.key>set-by-pipeline</servicebus.key>
+        <works.key>set-by-pipeline</works.key>
+        <assetfile.sas>set-by-pipeline</assetfile.sas>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>anypoint-exchange-v3</id>
+            <name>Anypoint Exchange</name>
+            <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -30,6 +53,36 @@
                 <artifactId>mule-maven-plugin</artifactId>
                 <version>${mule.maven.plugin.version}</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <classifier>mule-application</classifier>
+                    <cloudhub2Deployment>
+                        <uri>https://anypoint.mulesoft.com</uri>
+                        <provider>MC</provider>
+                        <server>anypoint-exchange-v3</server>
+                        <environment>${anypoint.environment}</environment>
+                        <target>${anypoint.target}</target>
+                        <muleVersion>${anypoint.muleVersion}</muleVersion>
+                        <javaVersion>17</javaVersion>
+                        <releaseChannel>EDGE</releaseChannel>
+                        <applicationName>${anypoint.appName}</applicationName>
+                        <replicas>1</replicas>
+                        <vCores>0.1</vCores>
+                        <deploymentSettings>
+                            <generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+                        </deploymentSettings>
+                        <properties>
+                            <env>${deploy.env}</env>
+                            <servicebus.namespace>${servicebus.namespace}</servicebus.namespace>
+                            <works.host>${works.host}</works.host>
+                            <assetfile.host>${assetfile.host}</assetfile.host>
+                        </properties>
+                        <secureProperties>
+                            <servicebus.key>${servicebus.key}</servicebus.key>
+                            <works.key>${works.key}</works.key>
+                            <assetfile.sas>${assetfile.sas}</assetfile.sas>
+                        </secureProperties>
+                    </cloudhub2Deployment>
+                </configuration>
             </plugin>
         </plugins>
     </build>
