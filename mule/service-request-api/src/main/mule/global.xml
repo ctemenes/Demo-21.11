@@ -36,7 +36,7 @@
     </azure-service-bus-messaging:config>
 
     <!-- Works management system API (Azure). -->
-    <http:request-config name="works-system-api" basePath="${works.basePath}" responseTimeout="20000" doc:name="Works system API">
+    <http:request-config name="works-system-api" basePath="${works.basePath}" responseTimeout="45000" doc:name="Works system API">
         <http:request-connection protocol="HTTPS" host="${works.host}" port="443"/>
     </http:request-config>
 
@@ -110,7 +110,7 @@ errorBody("UNSUPPORTED_MEDIA_TYPE", "Send the body as application/json.", correl
         </on-error-propagate>
         <on-error-propagate type="MULE:RETRY_EXHAUSTED, HTTP:CONNECTIVITY, HTTP:TIMEOUT, HTTP:SERVICE_UNAVAILABLE" doc:name="503">
             <logger level="ERROR" category="au.digitalaura.servicerequests"
-                    message='#["Downstream unavailable correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
+                    message='#[output text/plain --- "Downstream unavailable correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
             <ee:transform>
                 <ee:message>
                     <ee:set-payload><![CDATA[%dw 2.0
@@ -124,7 +124,7 @@ errorBody("DOWNSTREAM_UNAVAILABLE", "A downstream system could not be reached. N
         </on-error-propagate>
         <on-error-propagate type="ANY" doc:name="500">
             <logger level="ERROR" category="au.digitalaura.servicerequests"
-                    message='#["Unhandled error correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
+                    message='#[output text/plain --- "Unhandled error correlationId=$(correlationId) error=$(error.errorType.identifier default "") detail=$(error.description default "")"]'/>
             <ee:transform>
                 <ee:message>
                     <ee:set-payload><![CDATA[%dw 2.0

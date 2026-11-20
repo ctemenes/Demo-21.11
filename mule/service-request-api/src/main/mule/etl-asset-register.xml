@@ -44,7 +44,7 @@ output application/json
         <set-variable variableName="runId" doc:name="Run id"
                       value='#["ETL-" ++ ((now() >> "Australia/Brisbane") as String {format: "yyyyMMdd-HHmmss"})]'/>
         <logger level="INFO" category="au.digitalaura.etl" doc:name="Log start"
-                message='#["Asset register load starting run=$(vars.runId) source=$(p("assetfile.path"))"]'/>
+                message='#[output text/plain --- "Asset register load starting run=$(vars.runId) source=$(p("assetfile.path"))"]'/>
 
         <!-- Extract -->
         <http:request method="GET" config-ref="asset-file-store" doc:name="Extract: fetch the CSV"
@@ -74,7 +74,7 @@ payload]]></ee:set-payload>
                         </when>
                         <otherwise>
                             <logger level="WARN" category="au.digitalaura.etl" doc:name="Log reject"
-                                    message='#["Rejected row run=$(vars.runId) asset=$(payload.record.assetId default "") problems=$(payload.problems joinBy "; ")"]'/>
+                                    message='#[output text/plain --- "Rejected row run=$(vars.runId) asset=$(payload.record.assetId default "") problems=$(payload.problems joinBy "; ")"]'/>
                             <raise-error type="ETL:INVALID_ROW" description="Row failed the data quality checks."/>
                         </otherwise>
                     </choice>
@@ -106,7 +106,7 @@ output application/json
                     </ee:message>
                 </ee:transform>
                 <logger level="INFO" category="au.digitalaura.etl" doc:name="Log report"
-                        message='#["Asset register load finished run=$(payload.runId) total=$(payload.totalRows) loaded=$(payload.loadedRows) rejected=$(payload.rejectedRows)"]'/>
+                        message='#[output text/plain --- "Asset register load finished run=$(payload.runId) total=$(payload.totalRows) loaded=$(payload.loadedRows) rejected=$(payload.rejectedRows)"]'/>
                 <http:request method="POST" config-ref="works-system-api" path="/etl-runs" doc:name="Record the run">
                     <http:headers>#[{"x-functions-key": p("works.key"), "Content-Type": "application/json"}]</http:headers>
                 </http:request>

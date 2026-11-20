@@ -43,7 +43,7 @@
         <set-variable variableName="canonical" value="#[payload]" doc:name="Keep canonical message"/>
         <!-- Logs carry ids and routing only. Reporter details are never logged. -->
         <logger level="INFO" category="au.digitalaura.servicerequests" doc:name="Log accepted"
-                message='#["Accepted trackingId=$(vars.trackingId) correlationId=$(correlationId) category=$(vars.canonical.request.category) department=$(vars.canonical.routing.department)"]'/>
+                message='#[output text/plain --- "Accepted trackingId=$(vars.trackingId) correlationId=$(correlationId) category=$(vars.canonical.request.category) department=$(vars.canonical.routing.department)"]'/>
         <until-successful maxRetries="2" millisBetweenRetries="1000" doc:name="Queue with retry">
             <azure-service-bus-messaging:send config-ref="service-bus-config"
                                                destinationName="${servicebus.queue}"
@@ -55,7 +55,7 @@
             </azure-service-bus-messaging:send>
         </until-successful>
         <logger level="INFO" category="au.digitalaura.servicerequests" doc:name="Log queued"
-                message='#["Queued trackingId=$(vars.trackingId) correlationId=$(correlationId) queue=$(p("servicebus.queue"))"]'/>
+                message='#[output text/plain --- "Queued trackingId=$(vars.trackingId) correlationId=$(correlationId) queue=$(p("servicebus.queue"))"]'/>
         <ee:transform doc:name="Receipt">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
