@@ -107,12 +107,17 @@ jobs:
           XML
       - name: Version this release
         run: mvn -B -ntp -f "$POM" versions:set -DnewVersion=1.0.${{ github.run_number }} -DgenerateBackupPoms=false
-      - name: Publish to Exchange and deploy to CloudHub 2.0
+      - name: Publish the release to Anypoint Exchange
+        env:
+          ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+          ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+        run: mvn -B -ntp -f "$POM" clean deploy
+      - name: Deploy that release to CloudHub 2.0
         env:
           ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
           ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
         run: |
-          mvn -B -ntp -f "$POM" clean deploy -DmuleDeploy \
+          mvn -B -ntp -f "$POM" deploy -DmuleDeploy \
             -Dservicebus.namespace="$SB_NAMESPACE" -Dworks.host="$WORKS_HOST" -Dassetfile.host="$ASSET_HOST" \
             -Dservicebus.key="$SB_KEY" -Dworks.key="$WORKS_KEY" -Dassetfile.sas="$ASSET_SAS"
       - name: End-to-end smoke test
