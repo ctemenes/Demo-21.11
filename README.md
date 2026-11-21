@@ -7,6 +7,8 @@ stored, and can be tracked. A nightly job loads the asset register from a messy 
 
 Everything here is deployed and was tested end to end on 21 November 2026.
 
+**[Watch the three-minute demo video](https://youtu.be/7PWCaBUOJMY)**
+
 ```mermaid
 flowchart LR
     client([Web form or app])
