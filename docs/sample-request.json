@@ -1,0 +1,14 @@
+{
+  "category": "pothole",
+  "description": "Deep pothole in the left lane outside number 14, about 40 cm wide.",
+  "location": {
+    "address": "14 Example Street",
+    "suburb": "Paddington",
+    "postcode": "4064"
+  },
+  "assetId": "RD-001002",
+  "reporter": {
+    "name": "Alex Citizen",
+    "email": "alex.citizen@example.com"
+  }
+}
