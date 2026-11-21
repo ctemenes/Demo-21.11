@@ -132,12 +132,10 @@ Stated plainly so nobody has to find them:
   namespace-level access, and the app deliberately holds a send-only key for one queue.
   Sending works.
 
-## How it was built
+## How it went
 
-Built in November 2026 by Connor Temenes, directing AI coding agents (Claude), which
-wrote most of the code. It runs on my own MuleSoft and Azure accounts. Every part was
-deployed and tested before it was called done. The first live runs failed in several
-places, and each fix is its own commit.
+Every part was deployed and tested before it was called done. The first live runs failed
+in several places, and each fix is its own commit.
 
 ## Run it yourself
 
